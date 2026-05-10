@@ -1,0 +1,3 @@
+def analyze_tail_risk(returns):
+    skew = returns.skew()
+    kurt = returns.kurtosis()

@@ -1,0 +1,73 @@
+\ProvidesPackage{resume/dhuBeamer}[2024/02/08 dhuBeamer]
+
+\usepackage{resume/dhuBeamerInner}
+\usepackage{resume/dhuBeamerOuter}
+\usepackage{resume/dhuBeamerColor}
+\usepackage{resume/dhuBeamerFont}
+
+% 文本设置
+% \usepackage{enumerate} % 有/无序列表支持
+% \usepackage[hidelinks]{hyperref} % 目录添加超链接
+% \usepackage{zhnumber} % 章节序号中文展示
+% \usepackage{xpatch} % 参考文献编号
+% 数学支持
+\usepackage{amsmath} % 数学公式支持
+\usepackage{amssymb} % 数学符号支持
+\usepackage{latexsym} % 特殊符号
+\usepackage{mathtools} % 数学公式增强
+\usepackage{bm} % 公式加粗
+\usepackage{mathrsfs} % 花体字母
+% 图片设置
+\usepackage{caption} % 设置图片（表格）标题
+\usepackage{float} % 控制图片位置
+\usepackage{subfigure} % 图片并排
+\usepackage{graphicx} % 页眉插入图片支持
+% 表格设置
+\usepackage{booktabs} % 插入表格
+\usepackage{multirow} % 表格自动换行
+\usepackage{bigstrut} % 表格设置
+\usepackage{rotating} % 表格设置
+\usepackage{tabularx} % 表格设置
+
+
+% 强制 16:9 幻灯片比例
+\RequirePackage{geometry}
+\geometry{paperwidth=16cm,paperheight=9cm}
+
+% 设置页面背景
+\usepackage{tikz}
+\newcommand{\setBackground}[1]{
+    \ifstrempty{#1}{
+        \usebackgroundtemplate{
+            \tikz\node[opacity=0.5,inner sep=0pt]{  % 设置背景透明度为 0.5
+                \includegraphics[height=\paperheight,width=\paperwidth]{static/dhuBackWhite.png}
+            };
+        }
+    }{
+        \usebackgroundtemplate{
+            \tikz\node[opacity=1,inner sep=0pt]{
+                \includegraphics[height=\paperheight,width=\paperwidth]{static/dhuBackRed.png}
+            };
+        }
+    }
+}
+% 默认使用白色背景
+\setBackground{}
+
+% 设置图片（表格）的 caption 距离
+\captionsetup{aboveskip=2pt, belowskip=2pt}
+% 设置图片（表格）的 caption 和 section 联动
+\captionsetup[table]{labelformat=simple, labelsep=space}
+\renewcommand{\thetable}{\thesection.\arabic{table} }
+\captionsetup[figure]{labelformat=simple, labelsep=space}
+\renewcommand{\thefigure}{\thesection.\arabic{figure} }
+
+% 设置参考文献引用在右上角
+\newcommand{\upcite}[1]{\textsuperscript{\cite{#1}}}
+
+
+\def\cmd#1{\texttt{$\backslash$#1}}
+\def\env#1{\texttt{$\backslash$#1\{\}}}
+
+
+\endinput

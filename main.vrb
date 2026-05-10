@@ -1,0 +1,18 @@
+\frametitle{波动聚集(Volatility Clustering)}
+
+    \alert{GARCH 效应}: 大波动之后往往还是大波动，小波动之后往往还是小波动
+
+    波动率的自相关高达 $0.7 \sim 0.9$, 远高于收益率的自相关(约0):  \\
+    \hspace{2em} 收益率几乎不可预测（随机游走） \\
+    \hspace{2em} 波动率是可预测的 \\
+    \hspace{2em} 在低波动期建仓，高波动期减仓
+
+    ~\par
+    代码实现：
+    \begin{verbatim}
+def detect_volatility_clustering(returns, window=20):
+    """检测波动聚集"""
+    rolling_vol = returns.rolling(window).std()
+    vol_autocorr = rolling_vol.autocorr(lag=1)
+    print(f"波动率的滞后1期自相关: {vol_autocorr:.3f}")
+    \end{verbatim}

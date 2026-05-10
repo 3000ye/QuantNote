@@ -1,0 +1,63 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% 内部主题 (Inner Themes) 
+% 一个内部主题 (inner theme) 控制着排版演示稿的什么元素
+% 这些元素就是“内建”于帧的所有元素：
+%     1. 所有的 enumerations 排序环境
+%     2. itemize 环境
+%     3. 块 (Block) 环境
+%     4. 定理 (Theorem) 环境
+%     5. 目录 (table of contents)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\ProvidesPackage{resume/dhuBeamerInner}[2024/02/08 dhuBeamer Inner]
+
+% 设置 无极列表 itemize 的项目符号
+\setbeamertemplate{itemize items}[triangle]
+\setbeamertemplate{itemize subitem}[circle]
+\setbeamertemplate{itemize subsubitem}[square]
+
+% 设置 块 block 为圆角
+\setbeamertemplate{blocks}[rounded]
+
+% Define sectioning and table of contents
+\AtBeginSection[]
+{
+    \begingroup
+        \usebackgroundtemplate{
+            \tikz\node[opacity=1,inner sep=0pt]{
+                \includegraphics[height=\paperheight,width=\paperwidth]{static/dhuBackRed.png}
+            };
+        }
+
+        \setbeamercolor{frametitle}{fg=white}
+        \setbeamercolor{framesubtitle}{fg=white}
+
+        \setbeamertemplate{frametitle}{%
+            \vspace*{1em}
+            \begin{beamercolorbox}{frametitle}%
+                \usebeamerfont{frametitle}\insertframetitle\par
+                \usebeamerfont{framesubtitle}\insertframesubtitle
+            \end{beamercolorbox}
+
+            % 设置 logo 位置
+            \begin{picture}(0,0)
+                \put(-4,44){\makebox(0,0)[rt]{\includegraphics[height=1.8em]{static/dhuLogoTitleRed.png}}}
+            \end{picture}
+        }
+
+        \begin{frame}[t]
+            \frametitle{目录}
+            \framesubtitle{Table of Contents}
+
+            % 目录只显示一级标题
+            \setcounter{tocdepth}{1}
+            \tableofcontents[currentsection]
+        \end{frame}
+    \endgroup
+}
+
+% style of section presented in the table of contents
+\setbeamertemplate{section in toc}{$\blacktriangleright$~\inserttocsection}
+
+\endinput

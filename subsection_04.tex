@@ -1,0 +1,95 @@
+\subsection{技术指标的真实角色}
+
+\begin{frame}
+    \frametitle{技术指标的问题}
+
+    \alert{不能将技术指标当做买卖信号} \\
+    \hspace{2em} 指标是滞后的：MACD 金叉时，价格已经涨了一段 \\
+    \hspace{2em} 指标是简化的：一个数字无法概括复杂的市场状态 \\
+    \hspace{2em} 指标是被利用的：当所有人都在看同一个信号，信号就失效了
+
+    ~\par
+    指标不是用来直接交易的，而是用来描述市场状态的
+\end{frame}
+
+\begin{frame}
+    \frametitle{指标的本质=数学变换}
+    
+    \alert{数学变换}: 指标不会创造新信息，只是换一种方式呈现已有信息
+
+    \alert{滞后性}: 任何基于历史数据计算的指标，都必然是滞后的
+
+    \alert{信息压缩与损失}: 将多个交易日的数据，压缩为一个数字，损失大量信息
+
+    \begin{table}[htbp]
+        \centering
+        % \caption{常见技术指标的构造方式}
+        \begin{tabular}{lll}
+            \toprule
+            原始数据 & 变换方式 & 得到的指标 \\
+            \midrule
+            收盘价序列 & 滑动平均 & MA（移动平均线） \\
+            收盘价序列 & 指数加权平均 & EMA（指数移动平均） \\
+            涨跌幅序列 & 相对强度计算 & RSI \\
+            价格序列 & 均值 $\pm$ 标准差 & 布林带 \\
+            最高价、最低价、收盘价 & 多重计算 & MACD \\
+            \bottomrule
+        \end{tabular}
+    \end{table}
+\end{frame}
+
+\begin{frame}
+    \frametitle{MA / EMA: 平滑与滞后的权衡}
+
+    \alert{移动平均线(MA)}: 过去 $N$ 天的收盘价的简单平均 \\
+    \hspace{2em} $MA(5) = (P_1 + P_2 + P_3 + P_4 + P_5) / 5$ \\
+    \hspace{2em} 权重分布平均，对新数据反应慢，更平滑，适合长期趋势
+
+    ~\par
+    \alert{指数移动平均线(EMA)}: 给近期价格更高的权重 \\
+    \hspace{2em} $EMA = $ 今日价格 $\times \alpha$ + 昨日 $EMA \times (1 - \alpha)$, 其中 $\alpha = 2 / (N + 1)$ \\
+    \hspace{2em} 权重分布近期更高，对新数据反应快，更灵敏，适合短期趋势
+\end{frame}
+
+\begin{frame}
+    \frametitle{MACD: 趋势与动量}
+
+    MACD 是最常用的趋势指标之一，由三部分组成: \\
+    \hspace{2em} \alert{DIFF(快线)} $= EMA_{12} - EMA_{26}$, 短期趋势与长期趋势的差距 \\
+    \hspace{2em} \alert{DEA(信号线)} $= EMA_9(DIFF)$, DIFF 的平滑版本\\
+    \hspace{2em} 柱状图 = DIFF - DEA, 趋势加速/减速的程度 \\
+
+    \begin{table}[htbp]
+        \centering
+        \caption{MACD 状态解读}
+        \begin{tabular}{ccc}
+            \toprule
+            MACD 状态 & 含义 & 市场解读 \\
+            \midrule
+            DIFF $>$ 0, 柱状图变大 & 上涨趋势加速 & 多头强势 \\
+            DIFF $>$ 0, 柱状图变小 & 上涨趋势减速 & 可能见顶 \\
+            DIFF $<$ 0, 柱状图变小 & 下跌趋势减速 & 可能见底 \\
+            DIFF $<$ 0, 柱状图变大 & 下跌趋势加速 & 空头强势 \\
+            \bottomrule
+        \end{tabular}
+    \end{table}
+\end{frame}
+
+\begin{frame}
+    \frametitle{背离分析}
+
+    \alert{背离}是技术分析中最重要的概念之一: 
+
+    \begin{table}[htbp]
+        \centering
+        % \caption{MACD 背离类型对照表}
+        \begin{tabular}{cccc}
+            \toprule
+            背离类型 & 价格表现 & MACD 表现 & 含义 \\
+            \midrule
+            顶背离 & 创新高 & 未创新高 & 上涨动能衰竭，可能下跌 \\
+            底背离 & 创新低 & 未创新低 & 下跌动能衰竭，可能上涨 \\
+            \bottomrule
+        \end{tabular}
+    \end{table}
+\end{frame}

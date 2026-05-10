@@ -1,0 +1,80 @@
+\subsection{金融市场与交易基础}
+
+\begin{frame}[fragile]
+    \frametitle{交易对象与撮合机制}
+
+    \alert{标的(Asset)}: 交易的对象（股票，货币，期货等）
+
+    交易所通过规则撮合买卖双方：
+
+    \begin{verbatim}
+        1. 价格优先：出价高的买单优先成交
+        2. 时间优先：同价格下，先到的订单优先成交
+    \end{verbatim}
+
+    \alert{市价单(Market Order)}: 确保一定成交，但价格可能滑点。
+    
+    \alert{限价单(Limit Order)}: 控制价格不变，但有可能不成交。
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{时间尺度 Tick / K线}
+    
+    \alert{Tick 数据}：每一笔成交、每一档报价的变化。高频策略必需，存储成本高。
+
+    \alert{OHLCV(K线)}：将 Tick 聚合 $\Rightarrow (Open, High, Low, Close, Volume)$
+
+    \begin{verbatim}
+        Tick 数据（最细）
+        ↓ 聚合
+        分钟 K 线（1min, 5min, 15min）
+        ↓ 聚合
+        日线 / 周线 / 月线 / ...
+    \end{verbatim}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{滑点(Slippage)}
+
+    \begin{verbatim}
+        你要买 1000 股 AAPL，订单簿如下：
+          $185.01 - 200 股  ← 你先吃掉这 200 股
+          $185.05 - 500 股  ← 再吃掉这 500 股
+          $185.10 - 300 股  ← 最后吃掉这 300 股
+        
+        实际均价 = $185.057
+        预期价格 = $185.01
+        滑点 = $0.047 / 股 = 总计 $47
+    \end{verbatim}
+\end{frame}
+
+\begin{frame}
+    \frametitle{成本汇总}
+
+    \alert{滑点}: $0.01\% ~ 0.5\%$ 大单、低流动性标的受较大影响
+    
+    \alert{手续费}: $0.01\% ~ 0.1\%$ 每笔交易，高频策略受较大影响
+
+    \alert{市场冲击}: $0.05\% ~ 1\%+$ 交易本身会改变市场，大资金、小市值的标的受较大影响
+\end{frame}
+
+\begin{frame}
+    \frametitle{策略生命周期}
+
+    \alert{Step1: 信号生产(Signal Agent)}: \\
+    \hspace*{2em} "AAPL 的 MACD 出现底背离，建议做多"
+
+    \alert{Step2: 风控审核(Risk Agent)}: \\
+    \hspace*{2em} "当前总仓位 60\%，单笔最大 10\%，这笔只能下 10\%" \\
+    \hspace*{2em} 可能拒绝、缩小仓位、或通过
+    
+    \alert{Step3: 下单执行(Execution Agent)}: \\
+    \hspace*{2em} "订单太大，拆成 10 个小单，每 30 秒发一个，用 TWAP 算法"
+
+    \alert{Step4: 成交监控(Monitor Agent)}: \\
+    \hspace*{2em} "第 5 个小单滑点超过阈值，暂停后续执行"
+
+    \alert{持仓管理与平仓(Position Agent)}: \\
+    \hspace*{2em} "持仓盈利 5\%，触发移动止盈" \\
+    \hspace*{2em} "持仓亏损 2\%，触发止损平仓"
+\end{frame}

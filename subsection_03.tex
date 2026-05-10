@@ -1,0 +1,157 @@
+\subsection{数学与统计基础}
+
+\begin{frame}
+    \frametitle{时间序列}
+
+    传统统计学假设数据是(\alert{IID, 独立同分布}): \\
+    \hspace{2em} \alert{独立}: 今天的数据和昨天无关 \\
+    \hspace{2em} \alert{同分布}: 每天的数据来自同一个分布 \\
+    但金融数据几乎从不满足 IID 假设，今天的价格 = 昨天的价格 + 随机变动
+
+    ~\par
+    \alert{滞后(Lag)与自相关(Autocorrelation)}: 当前值和过去值的相关性 \\
+    \hspace{2em} 随机游走: 难以预测，自相关为 0 \\
+    \hspace{2em} 动量效应: 昨天涨，今天大概率涨，自相关为正 \\
+    \hspace{2em} 均值回归: 昨天涨，今天大概率跌，自相关为负
+
+    ~\par
+    \alert{平稳性}: 统计特性(均值，方差)不随时间变化，价格序列通常非平稳，收益率序列通常平稳。
+
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{收益的数学意义}
+
+    假设 AAPL 从 100 涨到 110 再跌回 100: 
+    \begin{verbatim}
+        简单收益 = (110 - 100) / 100 = 10%
+        简单收益 = (100 - 110) / 110 = -9.09%
+        
+        对数收益 = ln(110/100) = ln(1.1) = 9.53%
+        对数收益 = ln(100/110) = -9.53%
+    \end{verbatim}
+    涨 10\% 再跌回来，简单收益不等于0(因为基数变了)，但对数收益等于0。
+
+    对数收益可以直接相加，简单收益必须连乘，两种方法结果接近，但对数收益计算更简单。
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{年化收益率}
+
+    假设 60 个交易日赚了 5\%，年化是多少？
+    \begin{verbatim}
+        年化收益 = (1 + 5%)^(252/60) - 1
+                = 1.05^4.2 - 1
+                = 1.227 - 1
+                = 22.7%
+    \end{verbatim}
+
+    注意：策略回测一般用交易日计算，一年约 252 个交易日；基金持有一般用自然日计算，一年约 365.25 个自然日。
+    
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Python代码实现}
+
+    \begin{verbatim}
+def cumulative_return(returns, method='simple'):
+    """计算累计收益"""
+    if method == 'simple':
+        return (1 + returns).prod() - 1  # 连乘
+    else:
+        return returns.sum()  # 直接相加
+    \end{verbatim}
+
+    \begin{verbatim}
+def annualize_return(total_return, days, trading_days_per_year=252):
+    """年化收益率"""
+    years = days / trading_days_per_year
+    return (1 + total_return) ** (1 / years) - 1
+    \end{verbatim}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{风险的数学意义}
+    
+    假设 5 天的日收益率：+1\%, -2\%, +3\%, 0\%, -1\%
+    
+    \hspace{2em} 均值 = $(1 - 2 + 3 + 0 - 1) / 5 = 0.2\%$ \\
+    \hspace{2em} 方差 = $[(1-0.2)^2 + (-2-0.2)^2 + \dots ] / 5 = 2.96$ \\
+    \hspace{2em} 日波动率 = $\sqrt{2.96}\approx 1.72\% $ \\
+    \hspace{2em} 年化波动率 = 日波动率 $\times \sqrt{252}$ = $1.72 \times \sqrt{252} \approx 27.3\%$
+
+    ~\par
+    年化波动率 = 日波动率 $\times \sqrt{252} \approx$ 日波动率 $\times 16$
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{协方差与相关性}
+
+    相关系数衡量两个资产「是否同涨同跌」，但相关性是动态变化的。
+
+    危机时期的「相关性飙升」：正常时期不相关的资产，危机时可能突然相关性飙到 0.9。
+
+    ~\par
+    代码实现：
+    \begin{verbatim}
+def analyze_correlation(returns_a, returns_b):
+    """分析两个资产的相关性"""
+    corr = returns_a.corr(returns_b)
+    print(f"相关系数: {corr:.3f}")
+    \end{verbatim}
+\end{frame}
+
+\begin{frame}
+	\frametitle{厚尾分布(Fat Tails)}
+	
+	\alert{偏度(Skewness)}: 分布是否对称 \\
+    \hspace{2em} 偏度 $= 0 \rightarrow$ 对称（涨跌幅度差不多） \\
+    \hspace{2em} 偏度 $< 0 \rightarrow$ 左偏（暴跌比暴涨多） \\
+    \hspace{2em} 股票市场偏度通常是 $-0.5 \sim -1$, 说明暴跌风险大于暴涨机会
+
+    ~\par
+    \alert{峰度(Kurtosis)}: 尾部有多「厚」 \\
+    \hspace{2em} 峰度 $= 3 \rightarrow$ 正态分布 \\
+    \hspace{2em} 峰度 $= > \rightarrow$ 厚尾（极端事件比正态分布预测的多） \\
+    \hspace{2em} 股票市场峰度通常是 $5 \sim 10$, 远超正态分布的 3
+\end{frame}
+
+\begin{frame}[fragile]
+	\frametitle{厚尾分布(Fat Tails)}
+
+    厚尾对策略的影响：
+    \hspace{2em} 止损必须考虑跳空风险（隔夜暴跌可能跳过你的止损价）
+    \hspace{2em} VaR 模型会严重低估风险
+    \hspace{2em} 需要用 Expected Shortfall (CVaR) 替代 VaR
+
+    ~\par
+    代码实现：
+    \begin{verbatim}
+def analyze_tail_risk(returns):
+    """分析尾部风险"""
+    skew = returns.skew()  # 偏度
+    kurt = returns.kurtosis()  # 峰度（减3后的）
+    \end{verbatim}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{波动聚集(Volatility Clustering)}
+
+    \alert{GARCH 效应}: 大波动之后往往还是大波动，小波动之后往往还是小波动
+
+    波动率的自相关高达 $0.7 \sim 0.9$, 远高于收益率的自相关(约0):  \\
+    \hspace{2em} 收益率几乎不可预测（随机游走） \\
+    \hspace{2em} 波动率是可预测的 \\
+    \hspace{2em} 在低波动期建仓，高波动期减仓
+
+    ~\par
+    代码实现：
+    \begin{verbatim}
+def detect_volatility_clustering(returns, window=20):
+    """检测波动聚集"""
+    rolling_vol = returns.rolling(window).std()
+    vol_autocorr = rolling_vol.autocorr(lag=1)
+    print(f"波动率的滞后1期自相关: {vol_autocorr:.3f}")
+    \end{verbatim}
+\end{frame}
+
