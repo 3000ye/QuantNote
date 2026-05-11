@@ -1,0 +1,24 @@
+\frametitle{趋势类指标——背离分析}
+
+    \alert{背离}是技术分析中最重要的概念之一:
+
+    \begin{table}[htbp]
+        \centering
+        % \caption{MACD 背离类型对照表}
+        \begin{tabular}{cccc}
+            \toprule
+            背离类型 & 价格表现 & MACD 表现 & 含义 \\
+            \midrule
+            顶背离 & 创新高 & 未创新高 & 上涨动能衰竭，可能下跌 \\
+            底背离 & 创新低 & 未创新低 & 下跌动能衰竭，可能上涨 \\
+            \bottomrule
+        \end{tabular}
+    \end{table}
+
+    \begin{verbatim}
+顶背离示意：
+价格:  100 → 110 → 120 → 125 → 130（新高）
+MACD:  10 →  15 →  18 →  16 → 14（未新高）
+                            ↑
+                        动能衰竭信号
+    \end{verbatim}
