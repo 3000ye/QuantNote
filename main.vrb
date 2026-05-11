@@ -1,18 +1,24 @@
-\frametitle{波动聚集(Volatility Clustering)}
+\frametitle{背离分析}
 
-    \alert{GARCH 效应}: 大波动之后往往还是大波动，小波动之后往往还是小波动
+    \alert{背离}是技术分析中最重要的概念之一:
 
-    波动率的自相关高达 $0.7 \sim 0.9$, 远高于收益率的自相关(约0):  \\
-    \hspace{2em} 收益率几乎不可预测（随机游走） \\
-    \hspace{2em} 波动率是可预测的 \\
-    \hspace{2em} 在低波动期建仓，高波动期减仓
+    \begin{table}[htbp]
+        \centering
+        % \caption{MACD 背离类型对照表}
+        \begin{tabular}{cccc}
+            \toprule
+            背离类型 & 价格表现 & MACD 表现 & 含义 \\
+            \midrule
+            顶背离 & 创新高 & 未创新高 & 上涨动能衰竭，可能下跌 \\
+            底背离 & 创新低 & 未创新低 & 下跌动能衰竭，可能上涨 \\
+            \bottomrule
+        \end{tabular}
+    \end{table}
 
-    ~\par
-    代码实现：
     \begin{verbatim}
-def detect_volatility_clustering(returns, window=20):
-    """检测波动聚集"""
-    rolling_vol = returns.rolling(window).std()
-    vol_autocorr = rolling_vol.autocorr(lag=1)
-    print(f"波动率的滞后1期自相关: {vol_autocorr:.3f}")
+顶背离示意：
+价格:  100 → 110 → 120 → 125 → 130（新高）
+MACD:  10 →  15 →  18 →  16 → 14（未新高）
+                            ↑
+                        动能衰竭信号
     \end{verbatim}
